@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>i19abbsam_vigenere</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Samuele, Abbà,">
+    <meta name="description" content="Free Web of Samuele Abbà">
+    <meta name="author" content="Samuele Abbà">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Data creazione: 27.04.2021	Ultima modifica: 04.05.2021-->
+    <!--testato da chrome su W10-->
+
+    <script>
+        var tabellaAlfabeto;
+        var alfabeto;
+        
+        function tabella(){
+			if(document.getElementById("alfabetico").checked){
+				tabellaAlfabeto = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
+				alfabeto = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+			}else{
+				tabellaAlfabeto = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
+				alfabeto = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+			}
+            var c = 0;
+            for(var i=0;i<alfabeto.length;i++){
+                for(var j=0;j<alfabeto.length;j++){
+                    if(j+i <= alfabeto.length-1){
+                       tabellaAlfabeto[i][j] = alfabeto[j+i];
+                    }else{
+                        tabellaAlfabeto[i][j] = alfabeto[c];
+                        c++;
+                    }
+                }
+                c = 0;
+            }
+			window.alert(
+				"1) Immettere il verme" + 
+				"\n2) Immettere il testo in chiaro per cifrarlo" + 
+				"\n3) Immettere il testo cifrato per decifrarlo" +
+				"\n4) Impostare il tipo di dizionario alfabetico (lettere) o alfanumerico (lettere e numeri)");
+        }
+        
+        function validate(id){
+            var input = document.getElementById(id).value;
+            var output = "";
+            for(var i = 0;i<input.length;i++){
+				if(document.getElementById("alfabetico").checked){
+					if(input.charAt(i) >= 'A' && input.charAt(i) <= 'Z' || input.charAt(i) >= 'a' && input.charAt(i) <= 'z' || input.charAt(i) == ' '){
+                    	output += input.charAt(i).toLocaleUpperCase();
+                	}
+				}else{
+					if(input.charAt(i) >= 'A' && input.charAt(i) <= 'Z' || input.charAt(i) >= 'a' && input.charAt(i) <= 'z' || input.charAt(i) >= '0' && input.charAt(i) <= '9' || input.charAt(i) == ' '){
+                    	output += input.charAt(i).toLocaleUpperCase();
+                	}
+				}
+                
+            }
+            document.getElementById(id).value = output;
+        }
+        
+        function verme(){
+            var input = document.getElementById('inputStringa').value;
+            var verme = document.getElementById('inputVerme').value;
+            var output = "";
+            var x = 0;
+            if(verme.length>0){
+                for(var i = 0;i<input.length;i++){
+					if(input.charAt(i) != ' '){
+					   	output += tabellaAlfabeto[alfabeto.indexOf(input.charAt(i).toLocaleUpperCase())][alfabeto.indexOf(verme.charAt((i-x)%verme.length).toLocaleUpperCase())];
+					}else{
+					    output += ' ';
+						x++;
+					}
+                }
+            }else{
+                output = "";
+            }
+            document.getElementById('output').value = output;
+        }
+        
+        function vermeAlContrario(){
+            var verme = document.getElementById('inputVerme').value;
+            var output = document.getElementById('output').value;
+            var output2 = "";
+            var x = 0;
+            var c = 0;
+			var nonTrovato = true;
+			if(verme.length>0){
+                for(var i = 0;i<output.length;i++){
+					if(output.charAt(i) != ' '){
+						c = 0;
+						nonTrovato = true;
+						do{
+							if(tabellaAlfabeto[c][alfabeto.indexOf(verme.charAt((i-x)%verme.length).toLocaleUpperCase())] == output.charAt(i).toLocaleUpperCase()){
+								output2 += alfabeto[c];
+								nonTrovato = false;
+							}
+							c++;
+						}while(nonTrovato);
+					}else{
+                        output2 += ' ';
+                        x++;
+					}
+                }
+            }else{
+                output2 = "";
+            }
+            document.getElementById('inputStringa').value = output2;
+        }
+        
+        function fare(){
+            validate('inputStringa');
+            validate('inputVerme');
+            verme();
+        }
+        
+        function fareAlContrario(){
+			validate('output');
+            validate('inputVerme');
+            vermeAlContrario();
+        }
+    </script>
+    
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode';
+        }
+        #main{
+            text-align: center;
+        }
+        h3{
+            display: inline-block;
+            width: 200px;
+        }
+        textarea{
+            min-width: 25%;
+            min-height: 5%;
+        }
+        button{
+            min-width: 678px;
+        }
+    </style>
+
+</head>
+<body onload="tabella()">
+    <div id="main">
+        <br>
+        <h1 id="title">vigenere</h1>
+        <br>
+		<form id="alfabeto">
+  			<h3>ALFABETO: </h3>
+  			<h3>alfabetico</h3><input type="radio" id="alfabetico" name="alfabeto" value="alfabetico" onchange="tabella(), fare()" checked>
+			<h3>alfanumerico</h3><input type="radio" id="alfanumerico" name="alfabeto" value="alfanumerico" onchange="tabella(), fare()">
+		</form>
+        <h3>Testo in chiaro: </h3><textarea id="inputStringa" onkeyup="fare()"></textarea><br>
+        <h3>Verme: </h3><textarea id="inputVerme" onkeyup="fare()"></textarea><br>
+        <h3>Testo cifrato: </h3><textarea id="output" onkeyup="fareAlContrario()"></textarea><br>
+    </div>
+</body>
+</html>
